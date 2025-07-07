@@ -1,0 +1,2 @@
+openai = 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
+telegram = 8061257891:AAEi1WvBfjdmFY2O36qHGZztng66fJkr8Ac
