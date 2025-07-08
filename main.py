@@ -124,8 +124,14 @@ def handle_message(update, context):
 
 def handle_text(update, context):
     user_message = update.message.text
-    reply = ask_openai(user_message)
+    try:
+        # اگر خودت تابع ask_openai داری که API رو می‌زنه، اینجا اونو صدا بزن
+        reply = ask_openai(user_message)
+    except Exception as e:
+        logger.error(f"OpenAI API error in handle_text: {e}")
+        reply = "متاسفانه مشکلی پیش آمد. لطفا دوباره تلاش کنید."
     update.message.reply_text(reply)
+
 
 def error(update, context):
     logger.warning(f'Update {update} caused error {context.error}')
