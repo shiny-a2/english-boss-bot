@@ -3,6 +3,8 @@ import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import openai
 from apscheduler.schedulers.background import BackgroundScheduler
+from services.openai_api import ask_openai
+from telegram.ext import MessageHandler, Filters
 
 # تنظیمات لاگ
 logging.basicConfig(
@@ -60,6 +62,13 @@ def main():
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
 
     dp.add_error_handler(error)
+    
+def handle_text(update, context):
+    user_message = update.message.text
+    reply = ask_openai(user_message)
+    update.message.reply_text(reply)
+
+dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_text))
 
     # اجرای بات
     updater.start_polling()
