@@ -1,2 +1,25 @@
-openai = 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
-telegram = 8061257891:AAEi1WvBfjdmFY2O36qHGZztng66fJkr8Ac
+from telegram.ext import Updater, CommandHandler
+from config import BOT_TOKEN
+from daily import today_command
+from chat import chat_command
+from reminder import schedule_reminders
+import os
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+OPENAI_KEY = os.getenv("OPENAI_KEY")
+
+
+def start(update, context):
+    update.message.reply_text("👋 Welcome to *English Boss by AmirAli*!\nType /today to get your daily training.", parse_mode="Markdown")
+
+updater = Updater(BOT_TOKEN)
+dp = updater.dispatcher
+
+dp.add_handler(CommandHandler("start", start))
+dp.add_handler(CommandHandler("today", today_command))
+dp.add_handler(CommandHandler("chat", chat_command))
+
+schedule_reminders(updater.job_queue)
+
+updater.start_polling()
+updater.idle()
