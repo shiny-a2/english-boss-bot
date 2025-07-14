@@ -1,18 +1,19 @@
-import openai
 import os
+import openai
 
-openai.api_key = os.getenv("OPENAI_KEY")
+openai.api_key = os.getenv("openai_key")
 
-def ask_openai(prompt):
+async def get_openai_level(user_answers: list[str]) -> str:
+    prompt = "Determine CEFR level (A1–C2) based on these answers: " + "; ".join(user_answers)
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # یا gpt-4 اگه اکانت داری
+        response = await openai.ChatCompletion.acreate(
+            model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful English tutor."},
-                {"role": "user", "content": prompt}
-            ]
+                {"role": "system", "content": "You assess English language level."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.3,
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print("OpenAI Error:", e)
-        return "❌ مشکلی در ارتباط با هوش مصنوعی پیش آمد."
+        return f"OpenAI error: {e}"
