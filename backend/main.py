@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from backend.openai_api import get_openai_level
+from openai_api import get_openai_level
 from bot.bot import process_telegram_update
 
 app = FastAPI()

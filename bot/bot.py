@@ -1,6 +1,6 @@
 import os
 import httpx
-from bot.messages import WELCOME, QUESTIONS
+from messages import WELCOME, QUESTIONS
 from backend.openai_api import get_openai_level
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
