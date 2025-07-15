@@ -1,15 +1,26 @@
 from fastapi import FastAPI, Request
-from backend.openai_api import get_openai_level
+from contextlib import asynccontextmanager
 from bot.bot import process_telegram_update
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("🚀 English Boss Bot is up and running on /webhook")
+    yield
+    print("🛑 Shutting down...")
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def home():
-    return {"status": "English Boss is running"}
+    return {"status": "✅ English Boss is running"}
 
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
-    update = await request.json()
-    await process_telegram_update(update)
-    return {"ok": True}
+    try:
+        update = await request.json()
+        print("✅ Update received:", update)
+        await process_telegram_update(update)
+        return {"ok": True}
+    except Exception as e:
+        print("❌ Error in /webhook:", e)
+        return {"ok": False, "error": str(e)}
