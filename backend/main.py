@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request
-from backend.openai_api import get_openai_level
+from openai_api import get_openai_level
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from bot.bot import process_telegram_update
