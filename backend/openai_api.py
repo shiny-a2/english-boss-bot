@@ -1,19 +1,15 @@
 import os
 import openai
-
 openai.api_key = os.getenv("openai_key")
 
-async def get_openai_level(user_answers: list[str]) -> str:
-    prompt = "Determine CEFR level (A1–C2) based on these answers: " + "; ".join(user_answers)
+async def get_openai_level(answers):
+    joined = " ".join(answers)
+    prompt = f"Determine the English proficiency level (A1–C2) for this user: {joined}"
     try:
-        response = await openai.ChatCompletion.acreate(
+        response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You assess English language level."},
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.3,
+            messages=[{"role": "user", "content": prompt}]
         )
-        return response.choices[0].message.content.strip()
+        return response['choices'][0]['message']['content'].strip()
     except Exception as e:
-        return f"OpenAI error: {e}"
+        return f"Error: {str(e)}"
